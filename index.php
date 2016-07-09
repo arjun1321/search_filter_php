@@ -1,14 +1,18 @@
 <?php 
 
+
 $serverName = "localhost";
-$userName = "username";
-$password = "password";
+$userName = "root";
+$password = "";
 $databaseName = "userlist";
 
     function creating_database(){
-        
+        global $serverName;
+        global $userName;
+        global $userName;
+        global $password;
         // Creating connection
-        $connection = new mysqli_connect($serverName, $userName, $password);
+        $connection = mysqli_connect($serverName, $userName, $password);
         
         // Checking connection
         if(!$connection) {
@@ -20,7 +24,7 @@ $databaseName = "userlist";
         $sql = "CREATE DATABASE userlist";
         $result = mysqli_query($connection, $sql);
         if(!$result) {
-            die("Query Failed " . mysqli_error());
+            die("Query Failed " . mysqli_error($connection));
         }
         mysqli_close($connection);
     }
@@ -28,6 +32,10 @@ $databaseName = "userlist";
 
     function creating_table() {
         
+        global $serverName;
+        global $userName;
+        global $password;
+        global $databaseName;
         // Creating connection
         $connection = mysqli_connect($serverName, $userName, $password, $databaseName);
         
@@ -54,6 +62,10 @@ $databaseName = "userlist";
     }
 
     function inserting_data() {
+        global $serverName;
+        global $userName;
+        global $password;
+        global $databaseName;
         
         creating_database();
         creating_table();
@@ -73,11 +85,11 @@ $databaseName = "userlist";
         $location = array('Delhi','Mumbai','Kolkata','Chennai','Delhi','Mumbai','Kolkata','Chennai','Delhi','Mumbai');
         
         for($counter = 0; $counter < 10; $counter++) {
-            $sql = "INSERT INTO users (name, age, photo, height, location) VALUES ('$names[$counter]',$age[$counter],'$counter."jpg"',$height[$counter],'$location[$counter]')";
+            $sql = "INSERT INTO users (name, age, photo, height, location) VALUES ('$names[$counter]',$age[$counter],'$counter',$height[$counter],'$location[$counter]')";
             
             $result = mysqli_query($connection, $sql);
             if(!$result) {
-                die("Query Failed " . mysqli_error());
+                die("Query Failed " . mysqli_error($connection));
             }
             
         }
@@ -86,6 +98,8 @@ $databaseName = "userlist";
         
         
     }
+
+
 
 ?>
 
@@ -136,6 +150,30 @@ $databaseName = "userlist";
            <hr>
            
            <h4 id="userlist">User List</h4>
+           
+           <?php 
+            global $serverName;
+            global $userName;
+            global $password;
+            global $databaseName;
+            
+            // Creating connection
+            $connection = mysqli_connect($serverName, $userName, $password, $databaseName);
+
+            // Checking connection
+            if(!$connection) {
+                die("Connection failed: " .mysqli_connect_error());
+            }
+                
+                for($count =0; $count < 10; $count++) {
+                    echo '<div class="user">
+                        <img src="">
+                        
+                    </div>';
+                }
+            
+            ?>
+           
            
             
         </div>
