@@ -26,7 +26,7 @@ body {
 #main-content {
     background: white;
     width: 100%px;
-    height: 600px;
+    height: 800px;
     margin: 30px 100px;
 }
 
@@ -38,7 +38,9 @@ body {
     margin: 0 auto;
 }
 
-
+#userlist {
+    margin: 5px 100px;
+}
 
 
 
