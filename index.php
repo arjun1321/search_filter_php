@@ -198,6 +198,7 @@ if(!$connection) {
     mysqli_close($connection);
     } else {
     
+    if(mysqli_select_db($connection,$databaseName)) {
       // Creating connection
 $connection = mysqli_connect($serverName, $userName, $password, $databaseName);
 
@@ -232,6 +233,7 @@ if(!$connection) {
                 
             </div>';
           }
+    }
     
 }
             
