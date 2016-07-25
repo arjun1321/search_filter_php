@@ -40,6 +40,13 @@ body {
 
 #userlist {
     margin: 5px 100px;
+    width: 100px;
+    float: left;
+}
+
+.createbutton {
+    float: right;
+    margin: 5px 100px;
 }
 
 .user {
@@ -47,6 +54,40 @@ body {
     width: 500px;
     height: 200px;
     background: #fc3;
+}
+
+.image {
+    width: 190px;
+    height: 190px;
+    background-color: aquamarine;
+    position: relative;
+    top: 5px;
+    left: 10px;
+    margin-right: 20px;
+    float: left;
+}
+
+
+.details {
+    float: left;
+    width: 250px;
+    background-color: aquamarine;
+    height: 190px;
+    position: relative;
+    top: 5px;
+    margin-left: 10px;
+}
+
+.usertitle {
+    margin-left: 10px;
+    font-family: serif;
+    font-weight: bold;
+}
+
+.userdetail {
+    margin-left: 10px;
+    font-family: serif;
+    font-weight: bold;
 }
 
 

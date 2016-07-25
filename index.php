@@ -1,107 +1,26 @@
 <?php 
-
+    
+include('functions.php');
 
 $serverName = "localhost";
 $userName = "root";
 $password = "";
 $databaseName = "userlist";
 
-    function creating_database(){
-        global $serverName;
-        global $userName;
-        global $userName;
-        global $password;
-        // Creating connection
-        $connection = mysqli_connect($serverName, $userName, $password);
-        
-        // Checking connection
-        if(!$connection) {
-            die("Connection Failed " . mysqli_connect_error());
-        }
-        
-        
-        // Create database
-        $sql = "CREATE DATABASE userlist";
-        $result = mysqli_query($connection, $sql);
-        if(!$result) {
-            die("Query Failed " . mysqli_error($connection));
-        }
-        mysqli_close($connection);
-    }
+
+if(isset($_POST['create_database'])) {
+    inserting_data();
+}
+
+$connection = mysqli_connect($serverName, $userName, $password);
 
 
-    function creating_table() {
-        
-        global $serverName;
-        global $userName;
-        global $password;
-        global $databaseName;
-        // Creating connection
-        $connection = mysqli_connect($serverName, $userName, $password, $databaseName);
-        
-        // Checking connection
-        if(!$connection) {
-            die("Connection Failed: ". mysqli_connect_error());
-        }
-        
-        // Creating table
-        $sql = "CREATE TABLE users ( 
-                id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                name VARCHAR(30) NOT NULL,
-                age INT(10),
-                photo VARCHAR(10),
-                height INT(10),
-                location VARCHAR(30))";
-        
-        
-        $result = mysqli_query($connection, $sql);
-        if(!$result) {
-            die("Query Failed " . mysqli_error());
-        }
-        mysqli_close($connection);
-    }
 
-    function inserting_data() {
-        global $serverName;
-        global $userName;
-        global $password;
-        global $databaseName;
-        
-        creating_database();
-        creating_table();
-        
-        // Creating connection
-        $connection = mysqli_connect($serverName, $userName, $password, $databaseName);
-        
-        // Checking connection
-        if(!$connection) {
-            die("Connection failed: " .mysqli_connect_error());
-        }
-        
-        $names = array('Arjun','Pradeep','Rahul','Satyam','Shivam','Sundaram','Jai','Viru','Gabbar','Thakur');
-        
-        $age = array(20,15,22,17,17,17,21,24,26,26);
-        $height = array(3,4,5,6,6,5,3,4,4,4);
-        $location = array('Delhi','Mumbai','Kolkata','Chennai','Delhi','Mumbai','Kolkata','Chennai','Delhi','Mumbai');
-        
-        for($counter = 0; $counter < 10; $counter++) {
-            $sql = "INSERT INTO users (name, age, photo, height, location) VALUES ('$names[$counter]',$age[$counter],'$counter',$height[$counter],'$location[$counter]')";
-            
-            $result = mysqli_query($connection, $sql);
-            if(!$result) {
-                die("Query Failed " . mysqli_error($connection));
-            }
-            
-        }
-        
-        mysqli_close($connection);
-        
-        
-    }
 
 
 
 ?>
+
 
 
 
@@ -149,30 +68,181 @@ $databaseName = "userlist";
            <br><br>
            <hr>
            
-           <h4 id="userlist">User List</h4>
+           <div>
+               <h4 id="userlist">User List</h4>
+               
+               <?php 
+                if(!mysqli_select_db($connection,$databaseName)) {
+                    echo ' 
+                    <form action="index.php" method="post">
+                    <input class="btn btn-primary createbutton" name="create_database" value="Create Database" type="submit"> 
+                    </form>';
+                }
+               
+               ?>
+           </div>
+           
+           <div class="clearfix"></div>
            
            <?php 
-            global $serverName;
-            global $userName;
-            global $password;
-            global $databaseName;
             
-            // Creating connection
-            $connection = mysqli_connect($serverName, $userName, $password, $databaseName);
-
-            // Checking connection
-            if(!$connection) {
-                die("Connection failed: " .mysqli_connect_error());
-            }
+if(isset($_POST['submit'])) {
                 
-                for($count =0; $count < 10; $count++) {
-                    echo '<div class="user">
-                        <img src="">
+
+    // Creating connection
+$connection = mysqli_connect($serverName, $userName, $password, $databaseName);
+
+// Checking connection
+if(!$connection) {
+ die("Connection failed: " .mysqli_connect_error());
+}
+                    
+              
+    $height = $_POST['height'];
+    $location = $_POST['location'];
+    
+    if(!$height && !$location) {
+        echo '<div class="alert alert-danger">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        Please enter atleast one of the field!</div>';
+    }
+    
+    if($height && $location) {
+    
+          $query = "SELECT * FROM users WHERE height = $height AND location = '$location'";
+             
+          $result = mysqli_query($connection, $query);
+    
+          if(!$result){
+             die('Query FAILED '. mysqli_error($connection));
+          }
+             
+          while($row = mysqli_fetch_assoc($result)) {
+              echo '<div class="user">
+                
+                <div class="image">
+                    <img src="images/' .$row['id'].'.jpg" height="190px" width="190px">
+                </div>
+                
+                <div class="details">
+                    
+                    <h2 class="usertitle">' .$row['name']. '</h2>
+                    
+                    <p class="userdetail">Age: ' .$row['age']. ' </p>
+                    <p class="userdetail">Height: ' .$row['height']. '</p>
+                    <p class="userdetail">Location: ' .$row['location']. '</p>
+                </div>
+                
+            </div>';
+          }
                         
-                    </div>';
-                }
+        } else if($height) {
+        
+        $query = "SELECT * FROM users WHERE height = $height";
+             
+          $result = mysqli_query($connection, $query);
+    
+          if(!$result){
+             die('Query FAILED '. mysqli_error());
+          }
+             
+          while($row = mysqli_fetch_assoc($result)) {
+              echo '<div class="user">
+                
+                <div class="image">
+                    <img src="images/' .$row['id'].'.jpg" height="190px" width="190px">
+                </div>
+                
+                <div class="details">
+                    
+                    <h2 class="usertitle">' .$row['name']. '</h2>
+                    
+                    <p class="userdetail">Age: ' .$row['age']. ' </p>
+                    <p class="userdetail">Height: ' .$row['height']. '</p>
+                    <p class="userdetail">Location: ' .$row['location']. '</p>
+                </div>
+                
+            </div>';
+          }
+        
+    } else if($location) {
+        
+        $query = "SELECT * FROM users WHERE location = '$location'";
+             
+          $result = mysqli_query($connection, $query);
+    
+          if(!$result){
+             die('Query FAILED '. mysqli_error());
+          }
+             
+          while($row = mysqli_fetch_assoc($result)) {
+              echo '<div class="user">
+                
+                <div class="image">
+                    <img src="images/' .$row['id'].'.jpg" height="190px" width="190px">
+                </div>
+                
+                <div class="details">
+                    
+                    <h2 class="usertitle">' .$row['name']. '</h2>
+                    
+                    <p class="userdetail">Age: ' .$row['age']. ' </p>
+                    <p class="userdetail">Height: ' .$row['height']. '</p>
+                    <p class="userdetail">Location: ' .$row['location']. '</p>
+                </div>
+                
+            </div>';
+          }
+    }
+    
+    mysqli_close($connection);
+    } else {
+    
+      // Creating connection
+$connection = mysqli_connect($serverName, $userName, $password, $databaseName);
+
+// Checking connection
+if(!$connection) {
+ die("Connection failed: " .mysqli_connect_error());
+}
+    
+    $query = "SELECT * FROM users";
+             
+          $result = mysqli_query($connection, $query);
+    
+          if(!$result){
+             die('Query FAILED '. mysqli_error());
+          }
+             
+          while($row = mysqli_fetch_assoc($result)) {
+              echo '<div class="user">
+                
+                <div class="image">
+                    <img src="images/' .$row['id'].'.jpg" height="190px" width="190px">
+                </div>
+                
+                <div class="details">
+                    
+                    <h2 class="usertitle">' .$row['name']. '</h2>
+                    
+                    <p class="userdetail">Age: ' .$row['age']. ' </p>
+                    <p class="userdetail">Height: ' .$row['height']. '</p>
+                    <p class="userdetail">Location: ' .$row['location']. '</p>
+                </div>
+                
+            </div>';
+          }
+    
+}
+            
+            
+            
+                
+                
             
             ?>
+            
+            
            
            
             
